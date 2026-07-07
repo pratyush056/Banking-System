@@ -1,0 +1,1229 @@
+<meta http-equiv="Content-Security-Policy" 
+content="script-src 'self' 'unsafe-inline' 'unsafe-eval';">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BankingSystem Dashboard</title>
+  <style>
+    :root {
+      --ink: #162033;
+      --muted: #687487;
+      --line: #d9e1ea;
+      --panel: #ffffff;
+      --bg: #f4f7fb;
+      --brand: #0a4f8f;
+      --brand-2: #b5162d;
+      --brand-3: #0f7a66;
+      --soft-blue: #e9f2fb;
+      --soft-red: #fdecee;
+      --soft-green: #e9f7f3;
+      --shadow: 0 16px 40px rgba(20, 42, 76, 0.12);
+      --radius: 8px;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 268px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      background: #102442;
+      color: #f7fbff;
+      padding: 24px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 8px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+      background: #ffffff;
+      color: var(--brand);
+      font-weight: 800;
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .brand span {
+      color: #a9bdd6;
+      font-size: 12px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav button {
+      width: 100%;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 0;
+      border-radius: var(--radius);
+      color: #d8e5f4;
+      background: transparent;
+      padding: 10px 12px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: rgba(255, 255, 255, 0.11);
+      color: #ffffff;
+    }
+
+    .nav svg {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      padding: 14px;
+      color: #d5e3f2;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .main {
+      min-width: 0;
+    }
+
+    .topbar {
+      min-height: 76px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 16px 30px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-size: 23px;
+      letter-spacing: 0;
+    }
+
+    .topbar p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .search {
+      width: min(360px, 42vw);
+      height: 42px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+    }
+
+    .search svg {
+      width: 18px;
+      color: var(--muted);
+      flex: 0 0 auto;
+    }
+
+    .search input {
+      border: 0;
+      outline: 0;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .content {
+      padding: 28px 30px 42px;
+      display: grid;
+      gap: 24px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0a4f8f 0%, #153a63 53%, #b5162d 100%);
+      color: #ffffff;
+      border-radius: var(--radius);
+      padding: 26px;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 24px;
+      align-items: center;
+    }
+
+    .hero h3 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      margin: 0;
+      color: #dce9f8;
+      max-width: 720px;
+      line-height: 1.55;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      min-height: 40px;
+      border: 0;
+      border-radius: var(--radius);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 14px;
+      cursor: pointer;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .btn svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    .btn.primary {
+      background: var(--brand-2);
+      color: #fff;
+    }
+
+    .btn.secondary {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+
+    .btn.light {
+      background: var(--soft-blue);
+      color: var(--brand);
+    }
+
+    .hero-bank-card {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius);
+      padding: 20px;
+      min-height: 178px;
+    }
+
+    .card-number {
+      font-size: 20px;
+      margin: 34px 0 16px;
+      word-spacing: 6px;
+      font-weight: 700;
+    }
+
+    .bank-card-row {
+      display: flex;
+      justify-content: space-between;
+      color: #dce9f8;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .metric,
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 25px rgba(20, 42, 76, 0.06);
+    }
+
+    .metric {
+      min-height: 132px;
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .metric-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .metric-icon {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius);
+    }
+
+    .metric-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .metric-value {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .metric small {
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(340px, 0.75fr);
+      gap: 20px;
+    }
+
+    .panel {
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .panel h3 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .panel-head span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 780px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+      font-size: 14px;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #556274;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    tbody tr:hover {
+      background: #fbfdff;
+    }
+
+    .amount {
+      font-variant-numeric: tabular-nums;
+      font-weight: 800;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      border-radius: 999px;
+      padding: 0 10px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .pill.blue {
+      background: var(--soft-blue);
+      color: var(--brand);
+    }
+
+    .pill.green {
+      background: var(--soft-green);
+      color: var(--brand-3);
+    }
+
+    .pill.red {
+      background: var(--soft-red);
+      color: var(--brand-2);
+    }
+
+    .form {
+      padding: 18px 20px 20px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field label {
+      color: #536173;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      min-height: 40px;
+      padding: 9px 11px;
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 72px;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(10, 79, 143, 0.12);
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .record-list {
+      padding: 8px 20px 20px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .record {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+      background: #fff;
+    }
+
+    .record strong {
+      font-size: 15px;
+    }
+
+    .record span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tabs button {
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--muted);
+      padding: 0 12px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .tabs button.active {
+      color: #fff;
+      background: var(--brand);
+      border-color: var(--brand);
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: grid;
+      gap: 20px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      background: #102442;
+      color: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px 16px;
+      transform: translateY(18px);
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.2s ease;
+      max-width: min(360px, calc(100vw - 40px));
+      z-index: 20;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 1080px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .nav {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .sidebar-footer {
+        display: none;
+      }
+
+      .hero,
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 16px;
+      }
+
+      .search {
+        width: 100%;
+      }
+
+      .content {
+        padding: 18px 16px 32px;
+      }
+
+      .hero {
+        padding: 20px;
+      }
+
+      .hero h3 {
+        font-size: 24px;
+      }
+
+      .metrics,
+      .split,
+      .nav {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        padding: 18px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand" aria-label="BankingSystem">
+        <div class="brand-mark">BS</div>
+        <div>
+          <h1>BankingSystem</h1>
+          <span>Core banking console</span>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Main sections">
+        <button class="active" data-section="overview" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13h8V3H3zM13 21h8V11h-8zM13 3v6h8V3zM3 21h8v-6H3z"/></svg>
+          Overview
+        </button>
+        <button data-section="accounts" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10h18M5 10V7l7-4 7 4v3M6 10v9M10 10v9M14 10v9M18 10v9M4 19h16"/></svg>
+          Accounts
+        </button>
+        <button data-section="customers" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Customers
+        </button>
+        <button data-section="loans" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Loans & EMI
+        </button>
+        <button data-section="cards" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M7 15h.01M11 15h2"/></svg>
+          Cards
+        </button>
+        <button data-section="admin" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l7 4v6c0 5-3 9-7 10-4-1-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+          Branch Admin
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        Connected schema: branch, customer, employee, account, transactions, cards, loan, emi, account_holder.
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h2 id="pageTitle">Overview</h2>
+          <p id="pageSubtitle">Real-time branch, customer, account, loan, and transaction snapshot.</p>
+        </div>
+        <label class="search" aria-label="Search records">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input id="globalSearch" type="search" placeholder="Search customer, account, branch..." />
+        </label>
+      </header>
+
+      <div class="content">
+        <section class="section active" id="overview">
+          <div class="hero">
+            <div>
+              <h3>Main Downtown digital banking desk</h3>
+              <p>Manage accounts, deposits, withdrawals, cards, loans, and EMI schedules from one operational interface designed around your SQL database structure.</p>
+              <div class="hero-actions">
+                <button class="btn primary" type="button" data-quick="deposit">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                  New Deposit
+                </button>
+                <button class="btn secondary" type="button" data-goto="accounts">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                  Open Accounts
+                </button>
+              </div>
+            </div>
+            <div class="hero-bank-card" aria-label="Primary account card">
+              <div class="bank-card-row">
+                <span>Debit Card</span>
+                <strong>Verified</strong>
+              </div>
+              <div class="card-number">4532 1001 8842 9010</div>
+              <div class="bank-card-row">
+                <span>John Doe</span>
+                <span>Exp 08/29</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="metrics" id="metrics"></div>
+
+          <div class="grid">
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Recent Transactions</h3>
+                  <span>Mapped to the transactions table</span>
+                </div>
+                <button class="btn light" type="button" data-goto="accounts">View All</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Account</th>
+                      <th>Type</th>
+                      <th>Amount</th>
+                      <th>Date</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody id="transactionRows"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Quick Transaction</h3>
+                  <span>Deposit, withdrawal, or transfer</span>
+                </div>
+              </div>
+              <form class="form" id="transactionForm">
+                <div class="field">
+                  <label for="transactionAccount">Account</label>
+                  <select id="transactionAccount" required></select>
+                </div>
+                <div class="split">
+                  <div class="field">
+                    <label for="transactionType">Type</label>
+                    <select id="transactionType" required>
+                      <option>Deposit</option>
+                      <option>Withdrawal</option>
+                      <option>Transfer</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="transactionAmount">Amount</label>
+                    <input id="transactionAmount" type="number" min="1" step="0.01" value="2500" required />
+                  </div>
+                </div>
+                <div class="field">
+                  <label for="transactionDescription">Description</label>
+                  <textarea id="transactionDescription">Counter cash deposit</textarea>
+                </div>
+                <button class="btn primary" type="submit">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                  Post Transaction
+                </button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="accounts">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>Account Ledger</h3>
+                <span>Customer and branch-linked accounts</span>
+              </div>
+              <div class="tabs" role="tablist" aria-label="Account filters">
+                <button class="active" data-account-filter="All" type="button">All</button>
+                <button data-account-filter="Savings" type="button">Savings</button>
+                <button data-account-filter="Current" type="button">Current</button>
+                <button data-account-filter="Fixed Deposit" type="button">Fixed Deposit</button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Account No.</th>
+                    <th>Customer</th>
+                    <th>Branch</th>
+                    <th>Type</th>
+                    <th>Balance</th>
+                    <th>Joint Holder</th>
+                  </tr>
+                </thead>
+                <tbody id="accountRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="customers">
+          <div class="grid">
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Customers</h3>
+                  <span>Unique email and contact information</span>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th>Address</th>
+                    </tr>
+                  </thead>
+                  <tbody id="customerRows"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Add Customer</h3>
+                  <span>Creates a customer record</span>
+                </div>
+              </div>
+              <form class="form" id="customerForm">
+                <div class="field">
+                  <label for="customerName">Name</label>
+                  <input id="customerName" value="Aarav Mehta" required />
+                </div>
+                <div class="field">
+                  <label for="customerEmail">Email</label>
+                  <input id="customerEmail" type="email" value="aarav.mehta@example.com" required />
+                </div>
+                <div class="field">
+                  <label for="customerPhone">Phone</label>
+                  <input id="customerPhone" value="555-0303" required />
+                </div>
+                <div class="field">
+                  <label for="customerAddress">Address</label>
+                  <textarea id="customerAddress">42 Park Avenue</textarea>
+                </div>
+                <button class="btn primary" type="submit">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                  Add Customer
+                </button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="loans">
+          <div class="grid">
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Loan Portfolio</h3>
+                  <span>Customer-linked loans with repayment status</span>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Loan ID</th>
+                      <th>Customer</th>
+                      <th>Type</th>
+                      <th>Amount</th>
+                      <th>Rate</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="loanRows"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Upcoming EMI</h3>
+                  <span>Linked to the emi table</span>
+                </div>
+              </div>
+              <div class="record-list" id="emiList"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="cards">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>Issued Cards</h3>
+                <span>Debit and credit cards connected to accounts</span>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Card No.</th>
+                    <th>Account</th>
+                    <th>Holder</th>
+                    <th>Type</th>
+                    <th>Expiry</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="cardRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="admin">
+          <div class="grid">
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Branches</h3>
+                  <span>Operational branch records</span>
+                </div>
+              </div>
+              <div class="record-list" id="branchList"></div>
+            </div>
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Employees</h3>
+                  <span>Employees linked with branch_id</span>
+                </div>
+              </div>
+              <div class="record-list" id="employeeList"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const API = "http://localhost:3000";
+
+/* ================= LOAD ACCOUNTS ================= */
+async function loadAccounts() {
+  const res = await fetch(API + "/accounts");
+  const accounts = await res.json();
+
+  console.log("Accounts:", accounts);
+
+  // 🔹 Dropdown
+  const dropdown = document.getElementById("transactionAccount");
+  dropdown.innerHTML = "";
+
+  // 🔹 Accounts table
+  const table = document.getElementById("accountRows");
+  table.innerHTML = "";
+
+  accounts.forEach(acc => {
+    dropdown.innerHTML += `
+      <option value="${acc.id}">
+        ${acc.account_number} (₹${acc.balance})
+      </option>
+    `;
+
+    table.innerHTML += `
+      <tr>
+        <td>${acc.account_number}</td>
+        <td>${acc.customer_id}</td>
+        <td>${acc.branch_id}</td>
+        <td>${acc.account_type}</td>
+        <td>₹${acc.balance}</td>
+        <td>-</td>
+      </tr>
+    `;
+  });
+}
+
+/* ================= LOAD CUSTOMERS ================= */
+async function loadCustomers() {
+  const res = await fetch(API + "/customers");
+  const customers = await res.json();
+
+  console.log("Customers:", customers);
+
+  const table = document.getElementById("customerRows");
+  table.innerHTML = "";
+
+  customers.forEach(c => {
+    table.innerHTML += `
+      <tr>
+        <td>${c.id}</td>
+        <td>${c.name}</td>
+        <td>${c.email}</td>
+        <td>${c.phone}</td>
+        <td>${c.address || ""}</td>
+      </tr>
+    `;
+  });
+}
+
+/* ================= LOAD TRANSACTIONS ================= */
+async function loadTransactions() {
+  const res = await fetch(API + "/transactions");
+  const data = await res.json();
+
+  console.log("Transactions:", data);
+
+  const table = document.getElementById("transactionRows");
+  table.innerHTML = "";
+
+  data.forEach(t => {
+    table.innerHTML += `
+      <tr>
+        <td>${t.id}</td>
+        <td>${t.account_id}</td>
+        <td>${t.transaction_type}</td>
+        <td>₹${t.amount}</td>
+        <td>${t.transaction_date}</td>
+        <td>${t.description || ""}</td>
+      </tr>
+    `;
+  });
+}
+
+/* ================= SUBMIT TRANSACTION ================= */
+async function submitTransaction(e) {
+  e.preventDefault();
+
+  const account_id = document.getElementById("transactionAccount").value;
+  const type = document.getElementById("transactionType").value;
+  const amount = document.getElementById("transactionAmount").value;
+
+  await fetch(API + "/transaction", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ account_id, type, amount })
+  });
+
+  alert("✅ Transaction Done");
+
+  loadAccounts();
+  loadTransactions();
+}
+
+/* ================= ADD CUSTOMER ================= */
+document.getElementById("customerForm")
+  .addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    await fetch(API + "/customers", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: document.getElementById("customerName").value,
+        email: document.getElementById("customerEmail").value,
+        phone: document.getElementById("customerPhone").value,
+        address: document.getElementById("customerAddress").value
+      })
+    });
+
+    alert("✅ Customer Added");
+    loadCustomers();
+  });
+
+/* ================= EVENTS ================= */
+document.getElementById("transactionForm")
+  .addEventListener("submit", submitTransaction);
+
+/* ================= LOAD LOANS ================= */
+async function loadLoans() {
+  const res = await fetch(API + "/loans");
+  const loans = await res.json();
+
+  console.log("Loans:", loans);
+
+  const table = document.getElementById("loanRows");
+  table.innerHTML = "";
+
+  loans.forEach(l => {
+    table.innerHTML += `
+      <tr>
+        <td>${l.id}</td>
+        <td>${l.customer_id}</td>
+        <td>${l.loan_type}</td>
+        <td>₹${l.amount}</td>
+        <td>${l.interest_rate}%</td>
+        <td>${l.status}</td>
+      </tr>
+    `;
+  });
+}
+
+/* ================= LOAD EMI ================= */
+async function loadEMI() {
+  const res = await fetch(API + "/emi");
+  const emis = await res.json();
+
+  console.log("EMI:", emis);
+
+  const list = document.getElementById("emiList");
+  list.innerHTML = "";
+
+  emis.forEach(e => {
+    list.innerHTML += `
+      <div class="record">
+        <strong>Loan ID: ${e.loan_id}</strong>
+        <span>Amount: ₹${e.amount}</span>
+        <span>Due Date: ${e.due_date}</span>
+        <span>Status: ${e.status}</span>
+      </div>
+    `;
+  });
+}
+
+/* ================= LOAD CARDS ================= */
+async function loadCards() {
+  const res = await fetch(API + "/cards");
+  const cards = await res.json();
+
+  console.log("Cards:", cards);
+
+  const table = document.getElementById("cardRows");
+  table.innerHTML = "";
+
+  cards.forEach(c => {
+    table.innerHTML += `
+      <tr>
+        <td>${c.card_number}</td>
+        <td>${c.account_id}</td>
+        <td>${c.cardholder_name || "-"}</td>
+        <td>${c.card_type}</td>
+        <td>${c.expiry_date}</td>
+        <td>${c.status}</td>
+      </tr>
+    `;
+  });
+}
+
+/* ================= LOAD BRANCH + EMPLOYEES ================= */
+async function loadAdmin() {
+  const branches = await fetch(API + "/branches").then(r => r.json());
+  const employees = await fetch(API + "/employees").then(r => r.json());
+
+  console.log("Branches:", branches);
+  console.log("Employees:", employees);
+
+  // Branch
+  document.getElementById("branchList").innerHTML =
+    branches.map(b => `
+      <div class="record">
+        <strong>${b.name}</strong>
+        <span>${b.address}</span>
+        <span>Phone: ${b.phone}</span>
+      </div>
+    `).join("");
+
+  // Employees
+  document.getElementById("employeeList").innerHTML =
+    employees.map(e => `
+      <div class="record">
+        <strong>${e.name}</strong>
+        <span>Branch ID: ${e.branch_id}</span>
+        <span>Role: ${e.role}</span>
+      </div>
+    `).join("");
+}
+
+/* ================= INIT ================= */
+window.onload = () => {
+  loadAccounts();
+  loadCustomers();
+  loadTransactions();
+  loadLoans();        // ✅ NEW
+  loadEMI();          // ✅ NEW
+  loadCards();        // ✅ NEW
+  loadAdmin();        // ✅ NEW
+};
+</script>
+<script>
+/* ================= SIDEBAR NAVIGATION FIX ================= */
+
+document.querySelectorAll(".nav button").forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    // 🔹 Remove active class from all buttons
+    document.querySelectorAll(".nav button")
+      .forEach(b => b.classList.remove("active"));
+
+    // 🔹 Add active to clicked button
+    btn.classList.add("active");
+
+    // 🔹 Hide all sections
+    document.querySelectorAll(".section")
+      .forEach(sec => sec.classList.remove("active"));
+
+    // 🔹 Show selected section
+    const sectionId = btn.getAttribute("data-section");
+    document.getElementById(sectionId).classList.add("active");
+
+    // 🔹 Update page title
+    document.getElementById("pageTitle").innerText = btn.innerText;
+
+  });
+});
+</script>
+</body>
+</html>
