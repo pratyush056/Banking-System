@@ -168,7 +168,6 @@ or run it using Live Server.
 
 # 📸 Website Screenshots
 
-> Create a folder named **screenshots** in your repository and place your images there.
 
 ## Home Page
 
@@ -200,9 +199,9 @@ or run it using Live Server.
 
 ---
 
-## Employee Management
+## Branches Management
 
-![Employees](screenshots/employees.png)
+![Branches](screenshots/branches.png)
 
 ---
 
