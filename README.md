@@ -242,13 +242,10 @@ or run it using Live Server.
 
 **Pratyush Priyansh Sharma**
 
-GitHub: https://github.com/yourusername
+GitHub: https://github.com/pratyush056
 
 ---
 
-**Apoorv Kant Mishra**
-
----
 
 # 📚 Project Report
 
